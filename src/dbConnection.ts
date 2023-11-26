@@ -1,13 +1,14 @@
 'use strict';
+import dotenv from 'dotenv'
+dotenv.config()
 import Mongoose from 'mongoose';
 const uri =
-  process.env.DB_URI ||
-  `mongodb+srv://kingsley:5EEU6vVHpWXPyRmV@cluster0.oackwcf.mongodb.net/chat`;
+  process.env.DB_URI;
 
 
 export const dbConnect= async () => {
     //Connect to MongoDB
-   await Mongoose.connect(uri)
+   await Mongoose.connect(uri!)
         .then(() => console.log('MongoDB Connected'))
         .catch((error) => console.log('MongoDB Error: ' + error.message));
 

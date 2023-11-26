@@ -22,7 +22,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     res.send(user);
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.sendStatus(400);
   }
 };
 

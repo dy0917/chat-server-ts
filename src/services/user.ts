@@ -27,18 +27,33 @@ const findUserFullDetailByEmail = async (email: string) => {
 };
 
 const findUserByEmail = async (email: string) => {
-  const user = await User.findOne({ email })
-    .select(outString)
-    .exec();
+  const user = await User.findOne({ email }).select(outString).exec();
   return user;
 };
 
 const findUserById = async (_id: string) => {
-    const user = await User.findOne({ _id })
-      .select(outString)
-      .exec();
-    return user;
-  };
-  
+  const user = await User.findOne({ _id }).select(outString).exec();
+  return user;
+};
 
-export { createUser, findUserByEmail, findUserFullDetailByEmail, findUserById};
+const findUserByQueryString = async (queryString: string) => {
+  const regex = new RegExp(queryString, 'i');
+  const users = await User.find({
+    $or: [
+      { firstName: regex },
+      { lastName: regex },
+
+    ],
+  })
+    .select(outString)
+    .exec();
+  return users;
+};
+
+export {
+  createUser,
+  findUserByEmail,
+  findUserFullDetailByEmail,
+  findUserById,
+  findUserByQueryString,
+};
