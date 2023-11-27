@@ -28,13 +28,13 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
 const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  const exsitedUsers = await findUserFullDetailByEmail(email);
-  if (exsitedUsers.length == 0) {
+  const exsitedUser = await findUserFullDetailByEmail(email);
+  if (!exsitedUser) {
     res.status(401).send('Email or password is not correct');
     return;
   }
-  const exsitedUser = exsitedUsers[0];
 
+  console.log('exsitedUser', exsitedUser);
   if (await isPasswordMatch(exsitedUser, password)) {
     const user = await findUserByEmail(email);
     const token = await generateAccessToken(exsitedUser);

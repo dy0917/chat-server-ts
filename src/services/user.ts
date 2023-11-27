@@ -2,7 +2,6 @@ import User from '../models/user';
 import type { TUser } from '../models/user';
 import bcrypt from 'bcrypt';
 
-const outString = '-password -salt -createAt -updateAt';
 const createUser = async (
   firstName: string,
   lastName: string,
@@ -22,17 +21,17 @@ const createUser = async (
 };
 
 const findUserFullDetailByEmail = async (email: string) => {
-  const user = await User.find({ email });
+  const user = await User.findOne({ email }).select('password salt');
   return user;
 };
 
 const findUserByEmail = async (email: string) => {
-  const user = await User.findOne({ email }).select(outString).exec();
+  const user = await User.findOne({ email }).exec();
   return user;
 };
 
 const findUserById = async (_id: string) => {
-  const user = await User.findOne({ _id }).select(outString).exec();
+  const user = await User.findOne({ _id }).exec();
   return user;
 };
 
@@ -45,7 +44,6 @@ const findUserByQueryString = async (queryString: string) => {
 
     ],
   })
-    .select(outString)
     .exec();
   return users;
 };

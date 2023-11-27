@@ -14,7 +14,12 @@ const createChatRoom = async ({
 };
 
 const findPrivateChatRoomByUserId = async (userId: string) => {
-  const chatRooms = await privateChatRoom.find({ users: { $in: [userId] } });
+    const chatRooms = await privateChatRoom.find({ users: { $in: userId } }).populate({
+        path: 'users',
+        model: 'User',
+        match: { _id: { $ne: userId } },
+    }
+  );
   return chatRooms;
 };
 
