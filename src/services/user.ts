@@ -21,7 +21,7 @@ const createUser = async (
 };
 
 const findUserFullDetailByEmail = async (email: string) => {
-  const user = await User.findOne({ email }).select('password salt');
+    const user = await User.findOne({ email });
   return user;
 };
 

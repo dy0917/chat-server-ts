@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 const secret = 'your-secret-key';
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const tokenHeader = req.headers.authorization as string;
-    console.log('tokenHeader', tokenHeader);
     try {
         if (!tokenHeader || !tokenHeader.startsWith('Bearer ')) {
             return res.sendStatus(401);

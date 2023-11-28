@@ -34,7 +34,6 @@ const login = async (req: Request, res: Response) => {
     return;
   }
 
-  console.log('exsitedUser', exsitedUser);
   if (await isPasswordMatch(exsitedUser, password)) {
     const user = await findUserByEmail(email);
     const token = await generateAccessToken(exsitedUser);

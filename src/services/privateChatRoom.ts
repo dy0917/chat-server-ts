@@ -10,16 +10,22 @@ const createChatRoom = async ({
   const room = new privateChatRoom({
     users: [senderId, receiverId],
   });
-  return await room.save();
+  await room.save();
+  return room.populate({
+    path: 'users',
+    model: 'User',
+    match: { _id: { $ne: senderId } },
+  });
 };
 
 const findPrivateChatRoomByUserId = async (userId: string) => {
-    const chatRooms = await privateChatRoom.find({ users: { $in: userId } }).populate({
-        path: 'users',
-        model: 'User',
-        match: { _id: { $ne: userId } },
-    }
-  );
+  const chatRooms = await privateChatRoom
+    .find({ users: { $in: userId } })
+    .populate({
+      path: 'users',
+      model: 'User',
+      match: { _id: { $ne: userId } },
+    });
   return chatRooms;
 };
 
@@ -31,7 +37,7 @@ const findExistedPrivateChatRoom = async ({
   receiverId: string;
 }) => {
   const chatRooms = await privateChatRoom.find({
-    users: { $in: [senderId, receiverId] },
+    users: { $all: [senderId, receiverId] },
   });
   return chatRooms;
 };
