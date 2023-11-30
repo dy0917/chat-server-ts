@@ -4,9 +4,8 @@ import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
 import { TUser } from '../models/user';
 import { findUserById } from '../services/user';
+import { createMessage } from '../services/privateMessage';
 const secret = 'your-secret-key';
-
-const { addUser, getUser, deleteUser, getUsers } = require('../users');
 
 export const initSocket = (app: Express) => {
   const http = createServer(app);
@@ -18,57 +17,39 @@ export const initSocket = (app: Express) => {
       const user = await findUserById(_id);
       user!.socketId = socket.id;
       await user?.save();
-      const sockets = await io.fetchSockets();
-      console.log(
-        'clients',
-        sockets.map((s) => s.id)
-      );
     } catch (e) {
       console.log(e);
     }
-    // socket.on('login', ({ name, room }, callback) => {
-    //     const { user, error } = addUser(socket.id, name, room);
-    //     if (error) return callback(error);
-    //     socket.join(user.room);
-    //     socket.in(room).emit('notification', {
-    //         title: "Someone's here",
-    //         description: `${user.name} just entered the room`,
-    //     });
-    //     io.in(room).emit('users', getUsers(room));
-    //     callback();
-    // });
 
     socket.on(
       'sendMessage',
-      async (message: {
-        message: string;
-        roomId: string;
-        receiverId: string;
-      }) => {
-        console.log(message.receiverId);
-        const receiver = await findUserById(message.receiverId);
-        console.log('message.receiverId', receiver);
+      async (
+        {
+          context,
+          chatRoomId,
+          receiverId,
+        }: {
+          context: string;
+          chatRoomId: string;
+          receiverId: string;
+        },
+        callback
+      ) => {
+        const token = socket.handshake.query.token as string;
+        const { _id } = jwt.verify(token, secret) as TUser;
+        const receiver = await findUserById(receiverId);
+        console.log('context', context);
+        const message = await createMessage({
+          context,
+          senderId: _id,
+          receiverId,
+          chatRoomId,
+        });
         const receiverSocket = await io.sockets.sockets.get(receiver!.socketId);
-        console.log('receiverSocket', receiverSocket);
-        receiverSocket?.emit('receiveMessge', message.message);
-        // const sockets = await io.fetchSockets();
-        // console.log(
-        //   'clients',
-        //   sockets.map((s) => s.id)
-        // );
-        // sockets[]
-        // const user = getUser(socket.id);
-
-        //   io.in(user.room).emit('message', {
-        //     user: user.name,
-        //     text: message,
-        //   });
+        if (receiverSocket) receiverSocket?.emit('receiveMessge', message);
+        callback({ status: 200, message });
       }
     );
-    // socket.on('sendMessage', (message) => {
-    //     const user = getUser(socket.id);
-    //     io.in(user.room).emit('message', { user: user.name, text: message });
-    // });
 
     socket.on('disconnect', () => {
       console.log('User disconnected');

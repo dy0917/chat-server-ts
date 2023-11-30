@@ -1,9 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 import { generalSettings } from './types/General';
-import { TUser } from './user';
 
 export type PrivateMessage = {
-  message: string;
+  context: string;
   senderId: Schema.Types.ObjectId;
   receiverId: Schema.Types.ObjectId;
   _id: string;
@@ -12,7 +11,7 @@ export type PrivateMessage = {
 
 const privateMessageSchema = new mongoose.Schema<PrivateMessage>(
   {
-    message: String,
+    context: String,
     senderId: { type: Schema.Types.ObjectId, ref: 'User' },
     receiverId: { type: Schema.Types.ObjectId, ref: 'User' },
     chatRoomId: { type: Schema.Types.ObjectId, ref: 'PrivateChatRoom' },
@@ -20,5 +19,13 @@ const privateMessageSchema = new mongoose.Schema<PrivateMessage>(
 
   generalSettings
 );
+
+privateMessageSchema.set('toJSON', {
+    transform: (doc, ret) => {
+      delete ret.createAt;
+      delete ret.updateAt;
+      return ret;
+    },
+  });
 
 export default mongoose.model('PrivateMessage', privateMessageSchema);

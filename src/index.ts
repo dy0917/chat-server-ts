@@ -1,4 +1,6 @@
-import express, { Request, Response, NextFunction} from "express";
+import dotenv from 'dotenv'
+dotenv.config()
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { initSocket } from './sockets';
 import { dbConnect } from './dbConnection';
@@ -22,7 +24,7 @@ const main = async () => {
     const http = initSocket(app);
 
     app.get('/', (req:Request, res:Response) => {
-        res.send('Server is up and running');
+        res.send(`Server env:${ process.env.NODE_ENV} is up and running`);
     });
 
     app.use('/api/v1',router)

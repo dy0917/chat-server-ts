@@ -1,10 +1,7 @@
 'use strict';
-import dotenv from 'dotenv'
-dotenv.config()
 import Mongoose from 'mongoose';
 const uri =
   process.env.DB_URI;
-
 
 export const dbConnect= async () => {
     //Connect to MongoDB

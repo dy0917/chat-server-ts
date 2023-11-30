@@ -1,5 +1,5 @@
 // const users = []
-
+// const User = require(./user)
 // const addUser = (id, name, room) => {
 //     const existingUser = users.find(user => user.name.trim().toLowerCase() === name.trim().toLowerCase())
 
@@ -8,8 +8,9 @@
 //     if (!name) return { error: "Username is required" }
 //     if (!room) return { error: "Room is required" }
 
-//     const user = { id, name, room }
+//     const user = new User ({ id, name, room })
 //     users.push(user)
+// await user.save()
 //     return { user }
 // }
 
