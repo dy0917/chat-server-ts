@@ -45,8 +45,8 @@ jobs:
       - name: create env file
         run: |
           touch .env
-          echo HELLO_WORLD=${{ vars.HELLO_WORLD }} >> .env
-          echo API_SECRET=${{secrets.API_SECRET}} >> .env
+          echo NODE_ENV=${{ vars.NODE_ENV }} >> .env
+          echo DB_URI=${{secrets.DB_URI}} >> .env
           cat .env
       - name: npm install, build, and test
         run: |
