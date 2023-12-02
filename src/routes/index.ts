@@ -1,13 +1,14 @@
 import express, { Express, Request, Response } from 'express';
-import { register, login } from '../controllers/auth'
-import { verifyToken } from "../middleware/authorization";
-import { getCacheUser, getUsersByQueryString} from '../controllers/user';
+import { register, login } from '../controllers/auth';
+import { verifyToken } from '../middleware/authorization';
+import { getCacheUser, getUsersByQueryString } from '../controllers/user';
 import { initChatRoom } from '../controllers/privateChatRoom';
 // import authorization from './middleware/authorization';
 const router = express.Router();
 
 router.post('/auth/login', login);
 router.post('/auth/register', register);
+
 
 // router.post('/api/v1/auth/logout', auth.logout);
 //

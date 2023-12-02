@@ -46,7 +46,7 @@ const findMessagesByRoomId = async (roomIds: Array<string>) => {
     },
     { $unwind: '$last10Messages' },
   ]);
-  return messages.map(msg=>msg.last10Messages);
+  return messages.map(msg=>msg.last10Messages).reverse();
   // const messages = await privateMessage.find({ chatRoomId: { $in: roomIds } });
   // return messages;
 };
