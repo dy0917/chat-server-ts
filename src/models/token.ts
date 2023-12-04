@@ -1,6 +1,5 @@
 import mongoose, { Schema ,Types } from 'mongoose';
 import { generalFields, generalSettings } from './types/General';
-import { TUser } from './user';
 
 export type Token = {
   token: string;

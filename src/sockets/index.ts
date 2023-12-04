@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { TUser } from '../models/user';
 import { findUserById } from '../services/user';
 import { createMessage } from '../services/privateMessage';
-const secret = 'your-secret-key';
+import { encryptionKey } from '../env';
 
 export const initSocket = (app: Express) => {
   const http = createServer(app);
@@ -13,7 +13,7 @@ export const initSocket = (app: Express) => {
   io.on('connection', async (socket) => {
     try {
       const token = socket.handshake.query.token as string;
-      const { _id } = jwt.verify(token, secret) as TUser;
+      const { _id } = jwt.verify(token, encryptionKey!) as TUser;
       const user = await findUserById(_id);
       user!.socketId = socket.id;
       await user?.save();
@@ -37,7 +37,7 @@ export const initSocket = (app: Express) => {
       ) => {
         try {
           const token = socket.handshake.query.token as string;
-          const { _id } = jwt.verify(token, secret) as TUser;
+          const { _id } = jwt.verify(token, encryptionKey!) as TUser;
           const receiver = await findUserById(receiverId);
           const message = await createMessage({
             context,
