@@ -35,19 +35,24 @@ export const initSocket = (app: Express) => {
         },
         callback
       ) => {
-        const token = socket.handshake.query.token as string;
-        const { _id } = jwt.verify(token, secret) as TUser;
-        const receiver = await findUserById(receiverId);
-        console.log('context', context);
-        const message = await createMessage({
-          context,
-          senderId: _id,
-          receiverId,
-          chatRoomId,
-        });
-        const receiverSocket = await io.sockets.sockets.get(receiver!.socketId);
-        if (receiverSocket) receiverSocket?.emit('receiveMessge', message);
-        callback({ status: 200, message });
+        try {
+          const token = socket.handshake.query.token as string;
+          const { _id } = jwt.verify(token, secret) as TUser;
+          const receiver = await findUserById(receiverId);
+          const message = await createMessage({
+            context,
+            senderId: _id,
+            receiverId,
+            chatRoomId,
+          });
+          const receiverSocket = await io.sockets.sockets.get(
+            receiver!.socketId
+          );
+          if (receiverSocket) receiverSocket?.emit('receiveMessge', message);
+          callback({ status: 200, message });
+        } catch (e) {
+          callback({ status: 400 });
+        }
       }
     );
 
