@@ -47,6 +47,7 @@ jobs:
           touch .env
           echo NODE_ENV=${{ vars.NODE_ENV }} >> .env
           echo DB_URI=${{secrets.DB_URI}} >> .env
+          echo ENCRYPTION_KEY=${{secrets.ENCRYPTION_KEY}} >> .env
           cat .env
       - name: npm install, build, and test
         run: |
