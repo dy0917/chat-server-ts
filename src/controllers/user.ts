@@ -7,7 +7,16 @@ const getCacheUser = async (req: Request, res: Response) => {
   const user = req.user as TUser;
   const rooms = await findPrivateChatRoomByUserId(user._id);
   const messages = await findMessagesByRoomId(rooms.map((room) => room._id));
-  res.status(200).send({ user, rooms, messages });
+  const roomsWithMessages = rooms.map((room) => {
+    const roomJson = room.toObject();
+    return {
+      ...roomJson,
+      messages: messages.filter((m) => {
+        return m.chatRoomId.toString() === room._id.toString();
+      }),
+    };
+  });
+  res.status(200).send({ user, rooms: roomsWithMessages, messages });
 };
 
 type Query = {

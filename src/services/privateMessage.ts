@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import privateChatRoom from '../models/privateChatRoom';
-import privateMessage from '../models/privateMessage';
+import privateMessage, { PrivateMessage } from '../models/privateMessage';
 
 const createMessage = async ({
   context,
@@ -22,7 +22,7 @@ const createMessage = async ({
   return await message.save();
 };
 
-const findMessagesByRoomId = async (roomIds: Array<string>) => {
+const findMessagesByRoomId = async (roomIds: Array<string>):Promise<PrivateMessage[]> => {
   const messages = await privateMessage.aggregate([
     {
       $match: {
