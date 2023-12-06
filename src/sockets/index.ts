@@ -6,10 +6,12 @@ import { TUser } from '../models/user';
 import { findUserById } from '../services/user';
 import { createMessage } from '../services/privateMessage';
 import { encryptionKey } from '../env';
+import { PrivateChatRoom } from '../models/privateChatRoom';
 
-export const initSocket = (app: Express) => {
+let io: Server;
+const initSocket = (app: Express) => {
   const http = createServer(app);
-  const io = new Server(http);
+  io = new Server(http);
   io.on('connection', async (socket) => {
     try {
       const token = socket.handshake.query.token as string;
@@ -51,6 +53,7 @@ export const initSocket = (app: Express) => {
           if (receiverSocket) receiverSocket?.emit('receiveMessge', message);
           callback({ status: 200, message });
         } catch (e) {
+          console.log(e);
           callback({ status: 400 });
         }
       }
@@ -74,3 +77,10 @@ export const initSocket = (app: Express) => {
   });
   return http;
 };
+
+const sendRoomConfirm = async (socketId: string, room: PrivateChatRoom) => {
+  const receiverSocket = await io.sockets.sockets.get(socketId);
+  receiverSocket?.emit('addRoom', room);
+};
+
+export { io, initSocket, sendRoomConfirm };

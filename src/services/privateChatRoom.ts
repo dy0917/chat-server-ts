@@ -9,13 +9,20 @@ const createChatRoom = async ({
 }) => {
   const room = new privateChatRoom({
     users: [senderId, receiverId],
+    messages: [],
   });
   await room.save();
-  return room.populate({
-    path: 'users',
-    model: 'User',
-    match: { _id: { $ne: senderId } },
-  });
+  return room.populate([
+    {
+      path: 'users',
+      model: 'User',
+      match: { _id: { $ne: senderId } },
+    },
+    {
+      path: 'messages',
+      model: 'PrivateMessage',
+    },
+  ]);
 };
 
 const findPrivateChatRoomByUserId = async (userId: string) => {

@@ -11,7 +11,7 @@ const main = async () => {
   const app = express();
   app.use(express.json());
   await dbConnect();
-  const PORT = port || 5000;    
+  const PORT = port || 5000;
 
   app.use(cors());
 
@@ -21,14 +21,13 @@ const main = async () => {
     res.status(500).json({ error: 'Something went wrong!' });
   });
 
-  const http = initSocket(app);
-
   app.get('/', (req: Request, res: Response) => {
     res.send(`Server env:${nodeEnv} is up and running`);
   });
 
   app.use('/api/v1', router);
 
+  const http = initSocket(app);
   http.listen(PORT, () => {
     console.log(`Listening to ${PORT}`);
   });
