@@ -15,7 +15,7 @@ const initSocket = (app: Express) => {
   io.on('connection', async (socket) => {
     try {
       const token = socket.handshake.query.token as string;
-      const { _id } = jwt.verify(token, encryptionKey!) as TUser;
+            const { _id } = jwt.verify(token, encryptionKey!) as TUser;
       const user = await findUserById(_id);
       user!.socketId = socket.id;
       await user?.save();

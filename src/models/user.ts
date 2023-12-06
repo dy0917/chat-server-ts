@@ -31,6 +31,7 @@ userSchema.set('toJSON', {
     delete ret.salt;
     delete ret.createAt;
     delete ret.updateAt;
+    delete ret.socketId;
     return ret;
   },
 });

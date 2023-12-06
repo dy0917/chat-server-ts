@@ -10,7 +10,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
             return res.sendStatus(401);
         }
         const headerToken = tokenHeader.replace('Bearer ', '');
-        const decodedToken = jwt.verify(headerToken, encryptionKey!);
+                const decodedToken = jwt.verify(headerToken, encryptionKey!);
         if (decodedToken) {
             const {_id, email, firstName,lastName }:any = decodedToken;
             req.user = {_id, email, firstName, lastName }

@@ -21,7 +21,7 @@ const initChatRoom = async (req: Request, res: Response) => {
     const room = await createChatRoom({ senderId: req.user!._id, receiverId });
     const otherViewRoom = room.toObject();
     otherViewRoom.users = [];
-    otherViewRoom.users.push(sender!.toObject());
+    otherViewRoom.users.push(sender!.toJSON());
     if (receiver.socketId) await sendRoomConfirm(receiver.socketId, otherViewRoom);
     res.status(200).send({ room });
     return;
