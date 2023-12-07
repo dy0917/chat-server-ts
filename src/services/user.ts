@@ -20,7 +20,7 @@ const createUser = async (
 };
 
 const findUserFullDetailByEmail = async (email: string) => {
-    const user = await User.findOne({ email });
+  const user = await User.findOne({ email });
   return user;
 };
 
@@ -34,16 +34,17 @@ const findUserById = async (_id: string) => {
   return user;
 };
 
-const findUserByQueryString = async (queryString: string) => {
+const findUserByQueryString = async (
+  queryString: string,
+  filteroutIds?: string[]
+) => {
   const regex = new RegExp(queryString, 'i');
-  const users = await User.find({
-    $or: [
-      { firstName: regex },
-      { lastName: regex },
-
-    ],
-  })
-    .exec();
+  const users = await User.find(
+    {
+      $or: [{ firstName: regex }, { lastName: regex }],
+      _id: { $nin: filteroutIds },
+    },
+  ).exec();
   return users;
 };
 
