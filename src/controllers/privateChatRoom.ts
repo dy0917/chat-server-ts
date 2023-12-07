@@ -11,7 +11,8 @@ const initChatRoom = async (req: Request, res: Response) => {
   const sender = await findUserById(req.user!._id);
   const receiver = await findUserById(receiverId);
   if (!receiver) {
-    return res.status(401).send('User not found');
+    res.status(401).send('User not found');
+    return;
   }
   const existed = await findExistedPrivateChatRoom({
     senderId: req.user!._id,
@@ -22,11 +23,13 @@ const initChatRoom = async (req: Request, res: Response) => {
     const otherViewRoom = room.toObject();
     otherViewRoom.users = [];
     otherViewRoom.users.push(sender!.toJSON());
-    if (receiver.socketId) await sendRoomConfirm(receiver.socketId, otherViewRoom);
+    if (receiver.socketId)
+      await sendRoomConfirm(receiver.socketId, otherViewRoom);
     res.status(200).send({ room });
     return;
   }
-  return res.status(401).send('User has had channel');
+  res.status(401).send('User has had channel');
+  return;
 };
 
 export { initChatRoom };

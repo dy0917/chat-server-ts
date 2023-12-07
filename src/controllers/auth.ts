@@ -1,16 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-import {
-  isPasswordMatch,
-  generateAccessToken,
-} from '../services/auth';
+import { isPasswordMatch, generateAccessToken } from '../services/auth';
 
 import {
   createUser,
   findUserByEmail,
-  findUserFullDetailByEmail
+  findUserFullDetailByEmail,
 } from '../services/user';
 
-const register = async (req: Request, res: Response, next: NextFunction) => {
+const register = async (req: Request, res: Response) => {
   const { firstName, lastName, email, password } = req.body;
   try {
     const exsitedUser = await findUserByEmail(email);
@@ -26,7 +23,10 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const login = async (req: Request, res: Response) => {
+const login = async (
+  req: Request,
+  res: Response,
+) => {
   const { email, password } = req.body;
   const exsitedUser = await findUserFullDetailByEmail(email);
   if (!exsitedUser) {

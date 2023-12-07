@@ -53,7 +53,6 @@ const initSocket = (app: Express) => {
           if (receiverSocket) receiverSocket?.emit('receiveMessge', message);
           callback({ status: 200, message });
         } catch (e) {
-          console.log(e);
           callback({ status: 400 });
         }
       }
