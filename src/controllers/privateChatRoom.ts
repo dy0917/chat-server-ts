@@ -4,7 +4,7 @@ import {
   findExistedPrivateChatRoom,
 } from '../services/privateChatRoom';
 import { findUserById } from '../services/user';
-import { sendRoomConfirm } from '../sockets';
+import { appSocket } from '../';
 const initChatRoom = async (req: Request, res: Response) => {
   const { receiverId } = req.body;
 
@@ -24,7 +24,7 @@ const initChatRoom = async (req: Request, res: Response) => {
     otherViewRoom.users = [];
     otherViewRoom.users.push(sender!.toJSON());
     if (receiver.socketId)
-      await sendRoomConfirm(receiver.socketId, otherViewRoom);
+      await appSocket.sendRoomConfirm(receiver.socketId, otherViewRoom);
     res.status(200).send({ room });
     return;
   }
