@@ -1,6 +1,9 @@
-import mongoose, { Schema } from 'mongoose';
-import privateChatRoom from '../models/privateChatRoom';
 import privateMessage, { PrivateMessage } from '../models/privateMessage';
+
+type Query = {
+  roomId?: string;
+  lastMessageDateTime?: string;
+};
 
 const createMessage = async ({
   context,
@@ -22,7 +25,9 @@ const createMessage = async ({
   return await message.save();
 };
 
-const findMessagesByRoomId = async (roomIds: Array<string>):Promise<PrivateMessage[]> => {
+const findMessagesByRoomId = async (
+  roomIds: Array<string>
+): Promise<PrivateMessage[]> => {
   const messages = await privateMessage.aggregate([
     {
       $match: {
@@ -46,9 +51,30 @@ const findMessagesByRoomId = async (roomIds: Array<string>):Promise<PrivateMessa
     },
     { $unwind: '$last10Messages' },
   ]);
-  return messages.map(msg=>msg.last10Messages).reverse();
+  return messages.map((msg) => msg.last10Messages).reverse();
   // const messages = await privateMessage.find({ chatRoomId: { $in: roomIds } });
   // return messages;
 };
 
-export { createMessage, findMessagesByRoomId };
+const findMessagesByRoomAndTimeBefore = async ({
+  chatRoomId,
+  lastMessageDateTime,
+}: {
+  chatRoomId: string;
+  lastMessageDateTime: string;
+}) => {
+  // const rooms = await findPrivateChatRoomByUserId(user._id);
+
+  const historyMessages = await privateMessage
+    .find({
+      chatRoomId,
+      createdAt: { $lt: lastMessageDateTime },
+    })
+    .sort({ createdAt: -1 }) // Sort messages by timestamp in descending order
+
+    .limit(10);
+
+  return historyMessages;
+};
+
+export { createMessage, findMessagesByRoomId, findMessagesByRoomAndTimeBefore };

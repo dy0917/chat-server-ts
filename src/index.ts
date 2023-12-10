@@ -9,8 +9,6 @@ import router from './routes';
 import { port, nodeEnv } from './env';
 import { newSocket } from './sockets';
 
-
-
 const initApp = () => { 
    const app = express();
     app.use(express.json());

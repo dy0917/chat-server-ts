@@ -11,7 +11,7 @@ export type AppRoute = {
   method: 'get' | 'post' | 'patch' | 'delete' | 'update';
   permission?: Middleware;
   controller: (
-    req: Request,
+    req: Request<any>,
     res: Response,
     next?: NextFunction
   ) => void | Promise<void>;

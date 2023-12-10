@@ -5,6 +5,8 @@ import { getCacheUser, getUsersByQueryString } from '../controllers/user';
 import { initChatRoom } from '../controllers/privateChatRoom';
 import { AppRoute, Middleware } from '../types/AppRoute';
 import { AppMiddleware } from '../types/AppMiddleware';
+import { getMessagesByRoomAndTime } from '../controllers/message';
+
 
 const router = express.Router();
 const appRoutes: Array<AppRoute | AppMiddleware> = [
@@ -25,6 +27,11 @@ const appRoutes: Array<AppRoute | AppMiddleware> = [
     routeName: '/user/me',
     method: 'get',
     controller: getCacheUser,
+  },
+  {
+    routeName: '/messages',
+    method: 'get',
+    controller: getMessagesByRoomAndTime,
   },
   {
     routeName: '/users/find',
