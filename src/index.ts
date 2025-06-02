@@ -24,6 +24,10 @@ const initApp = () => {
       res.send(`Server env:${nodeEnv} is up and running`);
     });
   
+    app.get('/dummy', (req: Request, res: Response) => {
+      res.send("A dummy test route");
+    });
+
     app.use('/api/v1', router);
     return app;
 }
